@@ -1,1 +1,0 @@
-# Disaster-Management-System

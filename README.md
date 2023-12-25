@@ -1,1 +1,1 @@
-# WoC_6.0_Django
+# Disaster-Management-System
