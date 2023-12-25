@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Organization Volunteers</h2>
+    <div class="table-responsive mx-0">
+        <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col-auto">#</th>
+                <th scope="col-auto">Name</th>
+                <th scope="col-auto">Age</th>
+                <th scope="col-auto">City</th>
+                <th scope="col-auto">Availability</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            {% for volunteer in volunteers %}
+              <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ volunteer.user.get_full_name }}</td>
+                <td>{{ volunteer.age }}</td>
+                <td>{{ volunteer.city }}</td>
+                <td class='fw-semibold {{ volunteer.availability|yesno:"text-success,text-danger" }}'>{{ volunteer.availability|yesno:"Available,On-Duty" }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+   
+    
+</div>
+    
+{% endblock %}

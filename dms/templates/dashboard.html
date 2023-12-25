@@ -1,0 +1,101 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Dashboard</h2>
+    {% if messages %}
+    <div class="text-center mb-2">
+        {% for message in messages %}
+        <i class="text-danger text-center">{{ message }}</i>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="d-flex justify-content-center mb-4">
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check filter" id="filter-inprogress" name="filter-status" value="R" checked>
+            <label id='initFilter' class="btn btn-outline-danger text-nowrap" for="filter-inprogress">Reported</label>
+    
+            <input type="radio" class="btn-check filter" id="filter-solved" name="filter-status" value="I">
+            <label class="btn btn-outline-primary text-nowrap" for="filter-solved">In Progress</label>
+        
+            <input type="radio" class="btn-check filter" id="filter-rejected" name="filter-status" value="S">
+            <label class="btn btn-outline-success text-nowrap" for="filter-rejected">Solved</label>
+        </div>
+    </div>
+
+    {% if myTask %}
+    <div class="row report bg-body-secondary p-3 rounded mx-2 mb-4 border border-warning" status="{{myTask.status}}">
+        <div class="col-md-6">
+            <h5>{{ myTask.name }}</h5>
+            <h6 class="text-primary-emphasis">{{myTask.created}}</h6>
+            <p class="">{{ myTask.description }}</p>
+            <h6 class="mb-3">Severity Level: <span class="text-danger">{{ myTask.severity }}</span></h6>
+            <h6 class="mb-3">Assigned To: <span class="text-success-emphasis">
+                {{ myTask.assignee.user.get_full_name }}, {{ myTask.assignee.organization }}
+            </span></h6>
+            <a class="btn btn-success mb-md-0 mb-3" href="{% url 'solveTask' rID=myTask.reportID %}">Mark As Solved</a>
+        </div>
+        <div class="col-md-6">
+            <div class="mapouter" style="height: 100%">
+                <div class="gmap_canvas" style="height: 100%;">
+                    <iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q={{myTask.lat}},{{myTask.lon}}&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% for report in otherReports %}
+    <div class="row report bg-body-secondary p-3 rounded mx-2 mb-4" status="{{report.status}}">
+        <div class="col-md-6">
+            <h5>{{ report.name }}</h5>
+            <h6 class="text-primary-emphasis">{{report.created}}</h6>
+            <p class="">{{ report.description }}</p>
+            <h6 class="mb-3">Severity Level: <span class="text-danger">{{ report.severity }}</span></h6>
+            {% if report.assignee %}
+            <h6 class="mb-3">Assigned To: <span class="text-success-emphasis">
+                {{ report.assignee.user.get_full_name }}, {{ report.assignee.organization }}
+            </span></h6>
+            {% elif user.is_authenticated and user.volunteer.availability %}
+            <a class="btn btn-primary mb-md-0 mb-3" href="{% url 'acceptTask' rID=report.reportID %}">Accept Task</a>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <div class="mapouter" style="height: 100%">
+                <div class="gmap_canvas" style="height: 100%;">
+                    <iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q={{report.lat}},{{report.lon}}&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <i>No Reports Found.</i>
+    {% endfor %}
+</div>
+    
+<script>
+    // Filters using radio buttons
+    var filters = document.querySelectorAll('input[type=radio][name="filter-status"]');
+    for (var i = 0; i < filters.length; i++) {
+        f = filters[i];
+        f.addEventListener('click', () => {
+            fstatus = document.querySelector('input[name="filter-status"]:checked').value
+            var reports = document.getElementsByClassName("report");
+            for(var j = 0; j < reports.length; j++){
+                r = reports[j];
+                console.log(fstatus)
+                console.log(r.getAttribute('status'))
+                if(r.getAttribute('status') != fstatus){
+                    r.style.display = "none";
+                }
+                else{
+                    r.style.display = "flex";
+                }
+            }
+        });
+    }
+    document.getElementById('initFilter').click();
+</script>
+
+{% endblock %}

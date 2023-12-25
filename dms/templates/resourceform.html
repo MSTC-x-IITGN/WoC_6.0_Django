@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<div class="container py-5">
+    <h2 class="mb-4 text-center">{{ type }} Resource</h2>
+    <form method="POST" class="mx-1">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <div class="form-group text-center">
+            <input class="mt-4 btn btn-danger" type="reset" value="Reset" />
+            <input class="mt-4 btn btn-success" type="submit" value="{{ type }}" />
+        </div>
+        
+    </form>
+</div>
+    
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<div class="container py-5">
+    {% if user.volunteer %}
+    <h2 class="mb-4 text-center">Organization Resources</h2>
+    {% else %}
+    <h2 class="mb-4 text-center">Organization Resource Manager</h2>
+    {% endif %}
+
+    {% if messages %}
+    <div class="text-center mb-4">
+        {% for message in messages %}
+        <i class="text-danger text-center">{{ message }}</i>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-center mb-4">
+        <a class="btn btn-primary" href="{% url 'addResource' %}">Add Resource + </a>
+    </div>
+    <div class="table-responsive mx-0">
+        <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col-auto">#</th>
+                <th scope="col-auto">Name</th>
+                <th scope="col-auto">Quantity</th>
+                <th scope="col-auto">City</th>
+                <th scope="col-auto">Ward No.</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            {% for resource in resources %}
+              <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.quantity }}</td>
+                <td>{{ resource.city }}</td>
+                <td>{{ resource.ward }}</td>
+                {% if user.organization %}
+                <td class="text-end">
+                    <a class="btn btn-warning btn-sm my-md-0 my-1" href="{% url 'editResource' rID=resource.resourceID %}">Edit</a>
+                    <a class="btn btn-danger btn-sm my-md-0 my-1" href="{% url 'delResource' rID=resource.resourceID %}">Delete</a>
+                </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+   
+    
+</div>
+    
+{% endblock %}

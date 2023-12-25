@@ -1,0 +1,53 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Report Incident</h2>
+
+    {% if messages %}
+    <div class="text-center mb-2">
+        {% for message in messages %}
+        <i class="text-danger text-center">{{ message }}</i>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <form method="POST" class="mx-1">
+        {% csrf_token %}
+        <div class="mb-3 row justify-content-center">
+          <label for="name" class="col-lg-2 col-md-3 col-sm-4 col-form-label fw-semibold">Name</label>
+          <div class="col-sm-8 col-md-6">
+              <input type="text" class="form-control" name="name" required>
+          </div>
+        </div>
+        <div class="mb-3 row justify-content-center">
+          <div class="col-lg-8 col-md-9 col-sm-12">
+            <textarea class="form-control" required placeholder="Provide a short description..." name="description" style="height: 100px"></textarea>
+          </div>
+        </div>
+        <div class="mb-4 row justify-content-center">
+          <div class="col-lg-8 col-md-9 col-sm-12">
+            <label for="customRange3" class="form-label fw-semibold">Severity</label>
+            <input class="w-100" type="range" name="severity" list="markers" min="1" max="5" />
+            <datalist id="markers" style="
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              writing-mode: horizontal-tb;
+              width: 100%;
+            ">
+              <option value="1" label="1"></option>
+              <option value="2" label="2"></option>
+              <option value="3" label="3"></option>
+              <option value="4" label="4"></option>
+              <option value="5" label="5"></option>
+            </datalist>
+          </div>
+        </div>
+        <div class="form-group text-center">
+            <input class="mx-1 btn btn-primary" type="submit" value="Report" />
+        </div>
+    </form>
+</div>
+    
+{% endblock %}
